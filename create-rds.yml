@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+  - name: Create an RDS instance
+    rds_instance:
+#     vpc_security_group_ids: "{{ lookup('aws_ssm', '/Project-omega/{{ team }}/{{ vpc_security_group_ids }}', region='us-west-2') }}"
+#     engine: "{{ lookup('aws_ssm', '/Project-omega/{{ team }}/{{ engine_type }}', region='us-west-2') }}"
+#     engine_version: "{{ lookup('aws_ssm', '/Project-omega/{{ team }}/{{ engine_version }}', region='us-west-2') }}"
+      db_instance_class: "{{ db_instance_class }}"
+      region: "us-west-2"
+#     db_subnet_group_name: "{{ lookup('aws_ssm', '/Project-omega/{{ team }}/{{ db_subnet_group_name }}', region='us-west-2') }}"
+      publicly_accessible: "{{ lookup('aws_ssm', '/Project-omega/{{ team }}/{{ public_asscessible }}', region='us-west-2') }}"
+      db_name: "{{ instance_name }}"
+      password: "{{ lookup('aws_ssm', '/Project-omega/{{ team }}/{{ dbpasswd }}', region='us-west-2') }}"
+      username: "{{ username }}"
+      engine: "{{ database_engine }}"
+      multi_az: "{{ Enable_az }}"
+      db_instance_identifier: "{{ db_identifier }}"
+      engine_version: "{{ database_version }}" 
+      allocated_storage: "{{ allocated_storage }}"
+#     availability_zone: "{{ availability_zone }}"
+#     db_cluster_identifier: "{{ db_cluster_identifier }}"
+      force_update_password: "{{ rotate_passward_policy }}"
+      enable_performance_insights: "{{ enable_performance_insights }}"
+      tags:
+        created_by: "{{ created_by }}"
+        Owner: "{{ Owner }}"
+        App_Name: "{{ App_Name }}"
+        Cost_Center: "{{ Cost_Center }}"
+        Business_Unit: "{{ Business_Unit }}"
+     
+#  - debug:
+#      msg: rds_instance
+#  - debug:
+#      msg: "{{ allocated_storage.results[0].instance_ids }}"
